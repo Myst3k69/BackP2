@@ -1,6 +1,10 @@
 //database connection
+const mongoose = require('mongoose');
 
-const MongoClient = require('mongodb').MongoClient;
+
+const connectDb = () => {
+
+const MongoClient = mongoose.MongoClient;
 const uri = "mongodb+srv://p2:p2mdpb@cluster0.vf2je.mongodb.net/shakeit?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true ,  useUnifiedTopology: true });
 client.connect(err => {
@@ -10,5 +14,7 @@ client.connect(err => {
   
   client.close();
 })
+
+}
 
 module.exports = connectDb;

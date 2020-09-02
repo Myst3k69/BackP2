@@ -10,7 +10,8 @@ testAPIRouter=require("./routes/testAPI");
 postRouter=require("./routes/posts")
 require('dotenv/config')
 const { connect } = require('http2');
-//let connectDb = require("./connection");
+let connectDb = require("../api/connection");
+var bodyParser = require('body-parser')
  
 
 var app = express();
@@ -19,6 +20,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+//Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -29,6 +31,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/testAPI",testAPIRouter);
 app.use("/posts", postRouter)
+
+app.use(bodyParser.json());
 
 // Connect to Database
  connectDb();
