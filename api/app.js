@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 testAPIRouter=require("./routes/testAPI");
 postRouter=require("./routes/posts")
+ratesRouter= require("./routes/rates")
 require('dotenv/config')
 const { connect } = require('http2');
 let connectDb = require("../api/connection");
@@ -31,6 +32,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/testAPI",testAPIRouter);
 app.use("/posts", postRouter)
+app.use("/rates", ratesRouter)
 
 app.use(bodyParser.json());
 
