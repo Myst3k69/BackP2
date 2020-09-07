@@ -1,96 +1,84 @@
-let express =require('express');
-let router=express.Router();
-const Post = require('../models/Post');
-const { json } = require('body-parser');
-const Rating = require('../models/Rating.js')
+let express = require("express");
+let router = express.Router();
+const Post = require("../models/Post");
+const { json } = require("body-parser");
+const Rating = require("../models/Rating.js");
 
+// SUBMIT A RATE
 
+router.post("/", async (req, res) => {
+  const rateCocktail = new Rating({
+    idCocktail: req.body.idCocktail,
+    rate: req.body.rate,
+  });
 
-// GET RATING PER ID
+  try {
+    const savedPost = await rateCocktail.save();
+    res.json(savedPost);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
 // SPECIFIC POST
 
-router.get("/test/:id", async (req,res) => {
-
-    try {
-    
-        const post = await Rating.findById(req.params.id);
-        res.json(post);
-    
-    } catch(err) { 
-        
-        res.json ({ message : err});
-    
-    }
-    
-    });
-
+router.get("/test/:id", async (req, res) => {
+  try {
+    const post = await Rating.findById(req.params.id);
+    res.json(post);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
 // GET RATING AVERAGE
 
-router.get("/",  async(req,res) => {
+router.get("/", async (req, res) => {
+  try {
 
     
-    
-
-    try {
-
+    const avg = await Rating.aggregate([
+      { $group: { _id: "$idCocktail", average: { $avg: "$rate" } } },
        
+    ]);
 
-        const avg= await Rating.aggregate([{$group: {_id: "$idCocktail", average:{$avg:"$rate"}}}])
-      
-        
-        
-        res.json(avg);
+    
+    const nbNotes=Rating.length;
 
-
-
-    }catch(err) { res.json({message : err})}
-
+    res.json(avg);
+  } catch (err) {
+    res.json({ message: err });
+  }
 });
 
+// // GET RATING PER COCKTAIL
 
+const query = { _id: 0 };
+const options = {
+  sort: { rate: -1 },
 
- // // GET RATING PER COCKTAIL
+  projection: { rate: 1, idCocktail: 1 },
+};
 
- const query = {_id: 0}
- const options = {
+router.get("/:cocktail", async (req, res) => {
+  const id = req.params.cocktail;
 
-    sort : { rate:-1},
+  try {
+   
 
-    projection : { rate:1, idCocktail:1 },
+    const avg = await Rating.aggregate([
+      { $group: { _id: "$idCocktail", average: { $avg: "$rate" } } },
+    ]);
+    const resultat = await Rating.find({ idCocktail: "15427" });
+    const testavg = await resultat.aggregate([
+      { $group: { _id: "$idCocktail", average: { $avg: "$rate" } } },
+    ]);
 
- }
-
- 
-    router.get("/:cocktail",  async(req,res) => {
-
-        const id= req.params.cocktail;
-        
-
-        try {
+    res.json(resultat);
     
-            // const posts = await Rating.find({rate: {$gte:3}});
-            // res.json(posts);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
-            const avg= await Rating.aggregate([{$group: {_id: "$idCocktail", average:{$avg:"$rate"}}}])
-            const resultat = await Rating.find({"idCocktail" : "15427"})
-            const testavg= await resultat.aggregate([{$group: {_id: "$idCocktail", average:{$avg:"$rate"}}}])
-            
-            res.json(resultat)
-            //res.json(resultat);
-            //res.json(avg);
-    
-    
-    
-        }catch(err) { res.json({message : err})}
-    
-    });
-
-
-
-router.get("/feedback", (req,res) => res.send("Thanks for your feedback"));
-
-
-
-module.exports=router;
+module.exports = router;

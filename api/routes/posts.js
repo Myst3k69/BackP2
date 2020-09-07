@@ -56,42 +56,9 @@ try {
 
 });
 
-// SUBMIT A RATE
-
-router.post("/rating", async (req,res) => {
-
-    const rateCocktail = new Rating ({
-    
-    idCocktail: req.body.idCocktail,
-    rate : req.body.rate
-    
-    });
-    
-    try {
-    
-    const savedPost=await rateCocktail.save();
-    res.json(savedPost);
-    } catch (err) { res.json({ message : err});
-    }
-    
-    });
 
 
-    // // GET RATING PER COCKTAIL
-    router.get("/lol",  async(req,res) => {
-
-        try {
     
-            const posts = await Post.find();
-            res.json(posts);
-    
-    
-    
-        }catch(err) { res.json({message : err})}
-    
-    });
-
-    router.get("/feedback", (req,res) => res.send("Thanks for your feedback"));
 
 
 
