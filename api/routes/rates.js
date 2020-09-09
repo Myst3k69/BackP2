@@ -1,6 +1,6 @@
 let express = require("express");
 let router = express.Router();
-const Post = require("../models/Post");
+
 const { json } = require("body-parser");
 const Rating = require("../models/Rating.js");
 
