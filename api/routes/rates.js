@@ -7,6 +7,7 @@ const Rating = require("../models/Rating.js");
 // SUBMIT A RATE
 
 router.post("/", async (req, res) => {
+
   const rateCocktail = new Rating({
     idCocktail: req.body.idCocktail,
     rate: req.body.rate,
@@ -19,6 +20,9 @@ router.post("/", async (req, res) => {
     res.json({ message: err });
   }
 });
+
+
+
 
 // SPECIFIC POST
 
@@ -34,18 +38,27 @@ router.get("/test/:id", async (req, res) => {
 // GET RATING AVERAGE
 
 router.get("/", async (req, res) => {
+
+  const response = {
+
+avg:[],
+nbRates:"NAN"
+
+  }
   try {
 
     
-    const avg = await Rating.aggregate([
-      { $group: { _id: "$idCocktail", average: { $avg: "$rate" } } },
+    response.avg = await Rating.aggregate([
+      { $group: { _id: "$idCocktail", average: { $avg: "$rate" } } }
+    ])
+     
+    response.nbRates= await Rating.aggregate([
+      { $group: { _id: "$idCocktail", NbRates: { $sum: 1 } } }
        
     ]);
+    res.json(response);
 
     
-    const nbNotes=Rating.length;
-
-    res.json(avg);
   } catch (err) {
     res.json({ message: err });
   }
