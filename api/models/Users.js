@@ -14,4 +14,4 @@ const UsersSchema = mongoose.Schema({
     }
 })
 
-module.exports=mongoose.model('Users',RateSchema)
+module.exports=mongoose.model('Users',UsersSchema)

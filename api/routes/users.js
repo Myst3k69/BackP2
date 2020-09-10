@@ -21,3 +21,20 @@ router.post("/", async (req, res) => {
       res.json({ message: err });
     }
   });
+
+  router.get("/login", async (req,res) => {
+
+
+  
+    try{
+    
+      const auth= await User.find();
+      res.json(auth);
+
+  } catch (err) {
+
+    res.json({message : err})
+  }
+
+  })
+  module.exports=router;
