@@ -2,4 +2,6 @@
 
 API based on EXPRESS JS to allow customers to rate cocktails and see average rating. First project using an API & MongoDB (cloud version)
 
+**** Change the credentials of your mongo database in connection.js
+
 
